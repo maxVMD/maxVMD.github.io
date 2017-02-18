@@ -148,15 +148,15 @@ app.controller("ProjectListCtrl", function($scope, $http, $cookies){
     }
     
     function getLocalSessionKey() {
-        // return $cookies.get('session');
-        return localStorage['session'];
+        return $cookies.get('session');
+        //return localStorage['session'];
     }
     
     function setLocalSessionKey(sessionKey) {
         
         $scope.session = sessionKey;
         
-        // return $cookies.get('session');
+        
         localStorage['session'] = sessionKey;
     }
     
