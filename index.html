@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en" ng-app="projectsApp">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ProjectAndTasks</title>
+    
+	<link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+	<link rel="stylesheet prefetch" href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.3/angular-material.css">
+	<link rel="stylesheet" href="css/material.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+	
+    
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-cookie/4.1.0/angular-cookie.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-cookies.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+	<script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.3/angular-material.js"></script>
+	
+    <script type="text/javascript" src="js/app.js"></script>   
+	
+  </head>
+<body ng-controller="ProjectListCtrl">
+
+    <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+          <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-700">
+            <div class="mdl-layout__header-row">
+              <span class="mdl-layout-title">Tasks</span>
+                <div class="mdl-layout-spacer"></div>
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+                <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
+                  <i data-icons8="&#xf10a;"></i>
+                </label>
+              <div class="mdl-textfield__expandable-holder">
+                <input class="mdl-textfield__input" type="text" id="search">
+                <label class="mdl-textfield__label" for="search">Enter your query....</label>
+              </div>
+              </div>         
+            </div>
+          </header>
+
+      <div class="demo-drawer mdl-layout__drawer mdl-color--grey-900 mdl-color-text--blue-grey-50">
+        <header class="demo-drawer-header"> 
+            <div class="demo-avatar-dropdown">
+              <img src="{{account.image_url}}" class="demo-avatar">
+              <div class="mdl-grid"> <span>{{account.username}}</span>
+              </div>
+            </div>
+            <div class="mdl-layout-spacer"></div>    
+        </header>
+
+        <nav class="demo-navigation mdl-navigation mdl-color--blue-grey--1000">           
+          <a class="mdl-navigation__link" href="" ><h4>Prolects</h4> </a>
+          <a class="mdl-navigation__link" href="" ng-click="createpjDialog()"><h6>Add Project <i data-icons8="&#xf109;"></i></h6></a>
+
+          <ul style="list-style-type: none;">
+            <li ng-repeat="p in projects.projects">
+                <a href="" style="text-decoration: none; color: grey" ng-click="selectProject(p.Project.id)"><p>{{p.Project.title}} - <span>{{p.Project.task_count}}</span></a>
+        				<md-menu>
+        				  <md-button aria-label="Open project edit menu" class="md-icon-button" ng-click="openMenu($mdMenu, $event)">
+        					<i data-icons8="&#xf108;"></i>
+        				  </md-button>
+        				  <md-menu-content width="4">
+          					<md-menu-item>
+          					  <md-button ng-click="updateFormOpen(p.Project.id)">
+          						Update
+          					  </md-button>
+          					</md-menu-item>
+          					<md-menu-item>
+          					  <md-button ng-click="deleteProject(p.Project.id)">
+          						Delete
+          					  </md-button>
+          					</md-menu-item>
+        				  </md-menu-content>
+        				</md-menu>         
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!--main-->
+    <main class="mdl-layout__content mdl-color--grey-100">
+    		  <div class="progr" layout="row" layout-sm="column" layout-align="space-around" ng-show="isLoading"> 
+    			   <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    		  </div>  
+          <div class="mdl-grid demo-content" ng-hide="isLoading">
+            <div class="mdl-card mdl-cell mdl-cell--6-col z-depth-2 mdl-color--grey-400 mdl-color-text--blue-grey-50" ng-show="showAddForm" >
+              <div class="mdl-card__supporting-text">
+                <p>Enter Project name</p>
+                      <md-input-container class="md-block">
+
+                      <input md-maxlength="50" required md-no-asterisk name="project title" ng-model="projectTitleinput">
+                    <div ng-messages="">
+                      <div ng-message="md-maxlength">The description must be less than 50 characters long.</div>
+                    </div>
+                  </md-input-container>
+
+              </div>
+              <a href="" class="mdl-button mdl-js-button mdl-button--raised mdl-color--grey-400 mdl-color-text--blue-grey-50" style="color: grey;" ng-click="addPro()">Add</a>
+              <br>
+              <a href="" class="mdl-button mdl-js-button mdl-button--raised mdl-color--grey-400 mdl-color-text--blue-grey-50" style="color: grey;" ng-click="popUpDialogClose()">Cancel</a>      
+            </div>
+
+            <div class="mdl-card mdl-cell mdl-cell--4-col z-depth-2 mdl-color--grey-400 mdl-color-text--blue-grey-50" ng-show="showUpdateForm" >
+              <div class="mdl-card__supporting-text">
+                <p>Enter Project name</p>
+                    <md-input-container class="md-block">
+                      <input md-maxlength="50" required md-no-asterisk name="project title" ng-model="projectTitleinputUpdate">
+                      <div ng-messages="">
+                        <div ng-message="md-maxlength">The description must be less than 50 characters long.</div>
+                      </div>
+                    </md-input-container>              
+              </div>
+                <a href="" class="mdl-button mdl-js-button mdl-button--raised mdl-color--grey-400 mdl-color-text--blue-grey-50" style="color: grey;" ng-click="updateProj()">Add</a>
+                <br>
+                <a href="" class="mdl-button mdl-js-button mdl-button--raised mdl-color--grey-400 mdl-color-text--blue-grey-50" style="color: grey;" ng-click="updateformClose()">Cancel</a>      
+            </div>
+            <div id="addTSk" class="mdl-card mdl-cell mdl-cell--8-col z-depth-2 mdl-color--grey-400 mdl-color-text--blue-grey-50" style="display: none;">
+              <div class="mdl-card__supporting-text">
+                <p>Enter task name</p>
+                  <md-input-container class="md-block">
+                    <input md-maxlength="50" required md-no-asterisk name="Task title" ng-model="TaskTitleinput">
+                  </md-input-container>                                        
+                  <md-input-container class="md-block">                                         
+                    <input required md-no-asterisk name="Task description" ng-model="TaskDiscrinput">                     
+                  </md-input-container>
+              </div>
+                <a href="" class="mdl-button mdl-js-button mdl-button--raised mdl-color--grey-400 mdl-color-text--blue-grey-50" style="color: grey;" ng-click="addTaskForCurrentProject()">Add</a>
+                <br>
+                <a href="" class="mdl-button mdl-js-button mdl-button--raised mdl-color--grey-400 mdl-color-text--blue-grey-50" style="color: grey;" ng-click="addTaskFormClose()">Cancel</a>      
+            </div>
+
+<!--///////////////////////tasks update form ///////////////-->  
+
+                            <div class="mdl-card mdl-cell mdl-cell--8-col z-depth-2 mdl-color--grey-400 mdl-color-text--blue-grey-50" ng-show="updtTaskForm">
+                                      <div class="mdl-card__supporting-text">
+                                        <p>Enter task name</p>
+                                          <md-input-container class="md-block">
+                                          <input md-maxlength="50" required md-no-asterisk name="title" ng-model="inpetTaskTitlrUpdate">
+                                          </md-input-container>                                        
+                                          <md-input-container class="md-block">                                         
+                                          <input required md-no-asterisk name="description" ng-model="InputTaskDiscr">                     
+                                          </md-input-container>
+                                      </div>
+
+                                      <a href="" class="mdl-button mdl-js-button mdl-button--raised mdl-color--grey-400 mdl-color-text--blue-grey-50" style="color: grey;" ng-click="updateTask()">Add</a>
+                                      <br>
+                                      <a href="" class="mdl-button mdl-js-button mdl-button--raised mdl-color--grey-400 mdl-color-text--blue-grey-50" style="color: grey;" ng-click="updTaskFormClose()">Cancel</a>      
+                            </div>
+              <!--///////////////////////taskss  real ///////////////-->   
+            <div class="mdl-card mdl-cell mdl-cell--6-col z-depth-2"  ng-repeat="ts in Tasks"  >
+              <div class="mdl-card__supporting-text">
+                <md-radio-group>
+                  <md-radio-button value="Banana" ng-click="deleteTaskCurrent(ts.Task.id)"> finish task </md-radio-button>
+                </md-radio-group>
+                  <h4>{{ts.Task.title}}</h4>
+                  <md-divider ng-if="!$last"></md-divider>
+                  <p>{{ts.Task.description}}</p>
+              </div>                                      
+                  <input  class="mdl-button" type="button" value="Update" ng-click="openUpdateForm(ts.Task.id)">        
+            </div>  
+            
+			         <button id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--grey mdl-color-text--accent-contrast" ng-click="addNewTask()" ><i class="icons8-plus"></i> Add Task</button>
+			    </div>
+    </main>
+  </body>
+</html>
