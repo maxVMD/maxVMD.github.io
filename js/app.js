@@ -209,7 +209,7 @@ app.controller("ProjectListCtrl", function($scope, $http, $cookies){
     function requestSessionKey() {
         makeRequest('post', '/signup', null, null,
             function(response) {
-                setLocalSessionKey(response.data.session);
+                setLocalSessionKey(response.session);
                 load();
             }
         );
