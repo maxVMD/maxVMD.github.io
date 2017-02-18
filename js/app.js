@@ -156,8 +156,8 @@ app.controller("ProjectListCtrl", function($scope, $http, $cookies){
         
         $scope.session = sessionKey;
         
-        
-        localStorage['session'] = sessionKey;
+        $cookies.put('session', sessionKey)
+        //localStorage['session'] = sessionKey;
     }
     
     function makeRequest(method, url, params, data, onSuccess) {
